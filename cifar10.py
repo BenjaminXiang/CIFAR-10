@@ -109,6 +109,7 @@ def _convert_images(raw):
 
     # Convert the raw images from the data-files to floating-points.
     raw_float = np.array(raw, dtype=float) / 255.0
+#    raw_float = np.arange(raw, dtype=float)
 
     # Reshape the array to 4-dimensions.
     images = raw_float.reshape([-1, num_channels, img_size, img_size])

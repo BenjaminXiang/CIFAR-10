@@ -61,12 +61,12 @@ def main():
     images_test, cls_idx_test, labels_test = cifar10.load_test_data()
 
 
-    #Plot the first 9 training images and labels
+#    #Plot the first 9 training images and labels
     plot_9images(images=images_train[0:9], cls_idx_true=cls_idx_train[0:9],
                  all_cls_names=class_names, smooth=True)
     #
     # Build your predictor
-    train(images_train, labels_train)
+#    train(images_train, labels_train)
     #
     # # Visualize your prediction
     # samples = random.sample(range(len(images_test)), 9)
