@@ -16,35 +16,49 @@ def forward(x, w, b):
     out = sigmoid(np.dot(w.T, x)+b)
     return out 
 
-def ANN(num_train_data, train_data, train_labels, input_dim, hidden_dim, output_dim, weight_scale=1e-3):
+def ANN(train_data, train_labels, input_dim, hidden_dim, output_dim):
     
-    W1 =np.random.randn(input_dim, hidden_dim)*weight_scale
-    b1 = np.zeros( hidden_dim )
-    W2 = np.random.randn(hidden_dim, output_dim)*weight_scale
-    b2 = np.zeros( output_dim )
+    num_train_data = len(train_data)
     
+    # w1 shape is (1024, h_dim)
+    w1 = np.random.randn(input_dim, hidden_dim)*1e-2
+    # b1 shape is (h_dim, 1)                       
+    b1 = np.zeros( hidden_dim )                                                
+    # w2 shape is (h_dim, 10)
+    w2 = np.random.randn(hidden_dim, output_dim)*1e-2                       
+    # b2 shape is (10, 1)
+    b2 = np.zeros( output_dim )                                                
+    
+    input_learningrate = 0.2
+    hidden_learningrate = 0.2
     
     for i in range(num_train_data):
         # Forward
-        hidden_out = forward(train_data[i], W1, b1)
-        output = forward(hidden_out, W2, b2)
-    
-        loss = train_labels[i] - output
+        # train_data[i].shape is (1024, 1)
+        # hidden_out shape is (hidden_dim, 1)
+        hidden_out = forward(train_data[i], w1, b1)                            
+        #output shape is (10, 1)
+        output = forward(hidden_out, w2, b2)
         
-        g = dsigmoid(output)*loss
-        dw2 = rate*g*output                                 #5-1
-        db2 = -rate*g
-        
-        e = np.dot(W2.T, g)*dsigmoid(hidden_out)
-        dw1 = rate*e*train_data[i]
-        db1 = -rate*e
-        
-        W1 += dw1
-        b1 += db1
-        W2 += dw2
-        b2 += db2
-        
-    
+        # formula 1-1
+        # error shape is (10, 1)
+        error = 1/2*((train_labels[i] - output)**2)                            
+        #formula 1-2
+        # w2_gradient shape is (10, 1)
+        w2_gradient = error*dsigmoid(output)                                     
+        #formula 1-3
+        # w1_gradient shape is (hidden_dim, 1)
+        w1_gradient = np.dot(w2, w2_gradient)*dsigmoid(hidden_out) 
+        #Update w2 
+        for j in range(output_dim):
+            w2[:,j] += input_learningrate*w2_gradient[j]*hidden_out
+        for j in range(hidden_dim):
+            w1[:,j] += hidden_learningrate*w1_gradient[j]*train_data[i]
+            
+        #Update threshold
+        b2 += hidden_learningrate*w2_gradient
+        b1 += input_learningrate*w1_gradient
+            
     return W1, b1, W2, b2    
         
 
@@ -56,6 +70,8 @@ def train(images, one_hot_labels):
     # Convert an RGB image into Grayscale image 
     gray_images = np.dot(images[...,:3], [0.299, 0.587, 0.114])*255
     feature_vectors = np.zeros(shape=[num_images, img_size*img_size], dtype=float)
+    
+    # Get feature_vectors
     for i in range(num_images):
         feature_vectors[i] = images[i].ravel()
 #    raise NotImplementedError
