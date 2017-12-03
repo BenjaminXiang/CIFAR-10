@@ -3,7 +3,8 @@ import random
 import matplotlib.pyplot as plt
 
 import cifar10
-from lab8 import predict, train
+from lab8_ANN import predict, train
+from lab8_kNN import kNN
 
 
 def plot_9images(images, cls_idx_true, cls_idx_pred=None, all_cls_names=None, smooth=True):
@@ -62,18 +63,24 @@ def main():
 
 
 #    #Plot the first 9 training images and labels
-    plot_9images(images=images_train[0:9], cls_idx_true=cls_idx_train[0:9],
+#    plot_9images(images=images_train[0:9], cls_idx_true=cls_idx_train[0:9],
 #                 all_cls_names=class_names, smooth=True)
-    #
-    # Build your predictor
-    train(images_train, labels_train)
-    #
-    # # Visualize your prediction
-    # samples = random.sample(range(len(images_test)), 9)
-    # plot_9images(images=images_test[samples], cls_idx_true=cls_idx_test[samples],
-    #              cls_idx_pred=predict(images_test[samples]), all_cls_names=class_names, smooth=True)
-    #
-    # print(f'\nAccuracy: {(predict(images_test) == cls_idx_test).mean() * 100}%\n')
-
+#
+#    # Build your predictor
+#    w1, b1, w2, b2 = train(images_train, labels_train, images_test, cls_idx_test)
+#    
+#    # Visualize your prediction
+#    print('-----------------------------------------------Neural Network-----------------------------------------------')
+#    samples = random.sample(range(len(images_test)), 9)
+#    plot_9images(images=images_test[samples], cls_idx_true=cls_idx_test[samples],
+#                  cls_idx_pred=predict(images_test[samples], w1, b1, w2, b2), all_cls_names=class_names, smooth=True)
+#    print(f'\nAccuracy: {(predict(images_test, w1, b1, w2, b2) == cls_idx_test).mean() * 100}%\n')
+            
+    knn_idx = kNN(images_train, cls_idx_train, images_test)
+    print('----------------------------------------------k-Nearest Neighbor----------------------------------------------')
+    samples = random.sample(range(len(images_test)), 9)
+    plot_9images(images=images_test[samples], cls_idx_true=cls_idx_test[samples],
+                  cls_idx_pred=knn_idx[samples], all_cls_names=class_names, smooth=True)
+    print(f'\nAccuracy: {(knn_idx == cls_idx_test).mean() * 100}%\n')
 if __name__ == '__main__':
     main()
