@@ -12,7 +12,7 @@ def kNN(images_train, cls_idx_train, images_test):
     
     knn_idx = np.zeros(num_test, dtype=int)
     for i in range(num_test):
-        test_img = images_train[i]
+        test_img = images_test[i]
         min_distance = 3072
         for j in range(num_train):
             train_img = images_train[j]

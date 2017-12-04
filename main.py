@@ -70,14 +70,14 @@ def main():
     w1, b1, w2, b2 = train(images_train, labels_train, images_test, cls_idx_test)
     
     # Visualize your prediction
-    print('-----------------------------------------------Neural Network-----------------------------------------------')
+    print('--------------------------------Neural Network--------------------------------')
     samples = random.sample(range(len(images_test)), 9)
     plot_9images(images=images_test[samples], cls_idx_true=cls_idx_test[samples],
                   cls_idx_pred=predict(images_test[samples], w1, b1, w2, b2), all_cls_names=class_names, smooth=True)
     print(f'\nAccuracy: {(predict(images_test, w1, b1, w2, b2) == cls_idx_test).mean() * 100}%\n')
             
     knn_idx = kNN(images_train, cls_idx_train, images_test)
-    print('----------------------------------------------k-Nearest Neighbor----------------------------------------------')
+    print('-------------------------------k-Nearest Neighbor-------------------------------')
     samples = random.sample(range(len(images_test)), 9)
     plot_9images(images=images_test[samples], cls_idx_true=cls_idx_test[samples],
                   cls_idx_pred=knn_idx[samples], all_cls_names=class_names, smooth=True)
